@@ -2,7 +2,8 @@ public class Puzzle {
     private int[][] grid;
     private int blankRow;
     private int blankCol;
-
+    private static final int  MAX_ROW = 3;
+    private static final int  MAX_COL = 3;
     Puzzle(int[][] grid){
         this.grid = grid;
         for(int i=0;i<3;i++){
@@ -62,4 +63,35 @@ public class Puzzle {
         return children;
     }
 
+    @Override
+    public int hashCode() {
+        int [][] grid = getClone();
+        int result =0;
+        final int base = 10;
+        for(int i =0 ;i< MAX_ROW;i++){
+            for(int j=0;j<MAX_COL;j++){
+                result = base*result + grid[i][j];
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        int [][] objGrid = ((Puzzle)obj).getGrid();
+        for(int i=0;i<MAX_ROW;i++){
+            for(int j=0;j<MAX_COL;j++){
+                if(grid[i][j] != objGrid[i][j]){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
