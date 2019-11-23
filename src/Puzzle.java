@@ -4,20 +4,14 @@ public class Puzzle {
     private int blankCol;
     private int level;
     private Puzzle parent;
+    public int currentStateCost;
+    public int heuristicCost;
+    public int totalCost;
+    private String distance = "Edistance";
     private static final int  MAX_ROW = 3;
     private static final int  MAX_COL = 3;
 
-    Puzzle(int[][] grid){
-        this.grid = grid;
-        for(int i=0;i<3;i++){
-            for(int j=0;j<3;j++){
-                if(grid[i][j] == 0){
-                    blankRow = i;
-                    blankCol = j;
-                }
-            }
-        }
-    }
+
     Puzzle(int[][] grid, Puzzle parent, int level){
         this.grid = grid;
         this.level = level;
@@ -30,6 +24,40 @@ public class Puzzle {
             }
         }
         this.parent = parent;
+        if(distance.equals("Edistance")){
+            EuclideanCost();
+        }else{
+            ManhattanCost();
+        }
+        this.totalCost = heuristicCost + currentStateCost;
+    }
+
+
+    Puzzle(int[][] grid, Puzzle parent, int level, String distance, int currentStateCost){
+        this.grid = grid;
+        this.level = level;
+        for(int i=0;i<3;i++){
+            for(int j=0;j<3;j++){
+                if(grid[i][j] == 0){
+                    blankRow = i;
+                    blankCol = j;
+                }
+            }
+        }
+        this.parent = parent;
+        this.distance = distance;
+        this.currentStateCost = currentStateCost;
+        this.distance = distance;
+        if(distance.equals("Edistance")){
+            EuclideanCost();
+        }else{
+            ManhattanCost();
+        }
+        this.totalCost = currentStateCost + heuristicCost;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
     }
 
     public Puzzle getParent() {
@@ -93,11 +121,38 @@ public class Puzzle {
         swapGrid(upGrid,blankRow,blankCol,blankRow-1,blankCol);
         swapGrid(downGrid,blankRow,blankCol,blankRow+1,blankCol);
         Puzzle[] children = new Puzzle[4];
-        children[0] = new Puzzle(leftGrid,this,this.level + 1);
-        children[1] = new Puzzle(upGrid,this,this.level + 1);
-        children[2] = new Puzzle(rightGrid,this,this.level + 1);
-        children[3] = new Puzzle(downGrid,this, this.level + 1);
+        children[0] = new Puzzle(leftGrid,this,this.level + 1,distance, currentStateCost + 1);
+        children[1] = new Puzzle(upGrid,this,this.level + 1, distance, currentStateCost + 1);
+        children[2] = new Puzzle(rightGrid,this,this.level + 1,distance , currentStateCost + 1);
+        children[3] = new Puzzle(downGrid,this, this.level + 1,distance , currentStateCost + 1);
         return children;
+    }
+    private void EuclideanCost(){
+        int cost = 0;
+        for (int i = 0; i < MAX_ROW; i++){
+            for (int j = 0; j < MAX_COL; j++){
+                if (grid[i][j] != 0 ){
+                    int finalStateRow = (grid[i][j] - 1)/3;
+                    int finalStateCol = (grid[i][j] - 1)%3;
+                    cost = (int) (cost + Math.ceil(Math.sqrt((i - finalStateRow)*(i - finalStateRow) + (j-finalStateCol)*(j-finalStateCol))));
+                }
+            }
+        }
+        heuristicCost = cost;
+    }
+
+    private void ManhattanCost(){
+        int cost = 0 ;
+        for (int i = 0; i < MAX_ROW; i++){
+            for (int j = 0; j < MAX_COL; j++){
+                if (grid[i][j] != 0 ){
+                    int finalStateRow = (grid[i][j] - 1)/3;
+                    int finalStateCol = (grid[i][j] - 1)%3;
+                    cost = Math.abs(finalStateRow - i) + Math.abs(finalStateCol - j);
+                }
+            }
+        }
+        heuristicCost = cost;
     }
 
     @Override

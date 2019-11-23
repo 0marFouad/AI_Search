@@ -6,8 +6,13 @@ import java.util.Set;
 public class DFS {
     private List<Puzzle> path;
     private int cost;
+    private boolean success;
     private int maxDepth;
     private  List <Puzzle> expanded;
+
+    public DFS(Puzzle p){
+        this.success = run(p);
+    }
 
     public List<Puzzle> getPath() {
         return path;
@@ -23,6 +28,26 @@ public class DFS {
 
     public int getCost() {
         return cost;
+    }
+
+    public boolean getSuccess(){
+        return this.success;
+    }
+
+    public void print(){
+        if (!success){
+            System.out.println("Fail");
+            System.out.printf("depth: %s\n",maxDepth);
+            System.out.printf("cost: %s\n",cost);
+            System.out.printf("expanded: %s\n", expanded.size());
+        }else{
+            System.out.println("success");
+            System.out.printf("cost: %d\nDepth: %d\n",cost,maxDepth);
+            for(int i=0;i<path.size();i++){
+                path.get(i).printPuzzle();
+            }
+            System.out.println(path);
+        }
     }
 
     public boolean run(Puzzle puzzle){
@@ -42,6 +67,7 @@ public class DFS {
                     p = p.getParent();
                 }
                 cost = path.size() - 1;
+                maxDepth++;
                 return true;
             }
             Puzzle[] children = p.getChildren();

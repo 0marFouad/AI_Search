@@ -33,6 +33,27 @@ public class BFS {
     public BFS(Puzzle puzzle){
         reRun(puzzle);
     }
+
+    public List<Puzzle> getPath() {
+        return path;
+    }
+
+    public List<Puzzle> getExpanded() {
+        return expanded;
+    }
+
+    public int getCostPath() {
+        return costPath;
+    }
+
+    public int getSearchDepth() {
+        return searchDepth;
+    }
+
+    public boolean getSuccess(){
+        return this.success;
+    }
+
     public void  reRun(Puzzle puzzle){
         Node n = run(puzzle);
         if (n== null){
@@ -43,7 +64,7 @@ public class BFS {
         }
     }
     private  Node run(Puzzle puzzle){
-        expanded =new LinkedList<>();
+        expanded = new LinkedList<>();
         LinkedList <Node> queue = new LinkedList<>();
         Set <Puzzle> explored = new HashSet<>();
         Set <Puzzle> inQueue = new HashSet<>();
@@ -82,7 +103,7 @@ public class BFS {
         costPath = path.size()-1;
     }
 
-    public  void printStates(){
+    public void print(){
         if (!success){
             System.out.println("Fail");
             System.out.printf("depth: %s\n",searchDepth);
@@ -96,6 +117,4 @@ public class BFS {
             System.out.println(path.get(path.size()-1).isGoal());
         }
     }
-
-
 }
