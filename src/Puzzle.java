@@ -2,8 +2,11 @@ public class Puzzle {
     private int[][] grid;
     private int blankRow;
     private int blankCol;
+    private int level;
+    private Puzzle parent;
     private static final int  MAX_ROW = 3;
     private static final int  MAX_COL = 3;
+
     Puzzle(int[][] grid){
         this.grid = grid;
         for(int i=0;i<3;i++){
@@ -14,6 +17,27 @@ public class Puzzle {
                 }
             }
         }
+    }
+    Puzzle(int[][] grid, Puzzle parent, int level){
+        this.grid = grid;
+        this.level = level;
+        for(int i=0;i<3;i++){
+            for(int j=0;j<3;j++){
+                if(grid[i][j] == 0){
+                    blankRow = i;
+                    blankCol = j;
+                }
+            }
+        }
+        this.parent = parent;
+    }
+
+    public Puzzle getParent() {
+        return parent;
+    }
+
+    public int getLevel() {
+        return level;
     }
 
     public int[][] getGrid() {
@@ -45,6 +69,19 @@ public class Puzzle {
         return newGrid;
     }
 
+    public boolean isGoal(){
+        for(int i=0;i<3;i++){
+            for(int j=0;j<3;j++){
+                if(i != 2 || j != 2){
+                    if(grid[i][j] != 3*i + j + 1){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
 
     Puzzle[] getChildren(){
         int[][] leftGrid = getClone();
@@ -56,10 +93,10 @@ public class Puzzle {
         swapGrid(upGrid,blankRow,blankCol,blankRow-1,blankCol);
         swapGrid(downGrid,blankRow,blankCol,blankRow+1,blankCol);
         Puzzle[] children = new Puzzle[4];
-        children[0] = new Puzzle(leftGrid);
-        children[1] = new Puzzle(upGrid);
-        children[2] = new Puzzle(rightGrid);
-        children[3] = new Puzzle(downGrid);
+        children[0] = new Puzzle(leftGrid,this,this.level + 1);
+        children[1] = new Puzzle(upGrid,this,this.level + 1);
+        children[2] = new Puzzle(rightGrid,this,this.level + 1);
+        children[3] = new Puzzle(downGrid,this, this.level + 1);
         return children;
     }
 
