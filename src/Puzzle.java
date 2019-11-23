@@ -131,4 +131,14 @@ public class Puzzle {
         }
         return true;
     }
+
+    public void printPuzzle(){
+        for(int i=0;i<MAX_ROW;i++){
+            for(int j=0;j<MAX_COL;j++){
+                System.out.printf("%d ",grid[i][j]);
+            }
+            System.out.println();
+        }
+        System.out.println("===================");
+    }
 }
