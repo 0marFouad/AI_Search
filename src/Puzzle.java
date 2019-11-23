@@ -94,4 +94,26 @@ public class Puzzle {
         }
         return true;
     }
+    public boolean isGoal(){
+        int prev =0;
+        for(int i=0;i<MAX_ROW ;i++){
+            int col = (i == MAX_ROW-1) ? MAX_COL-1 : MAX_COL;
+            for(int j=0;j<col;j++){
+                if(grid[i][j]<=prev){
+                    return false;
+                }
+                prev = grid[i][j];
+            }
+        }
+        return true;
+    }
+    public void printPuzzle(){
+        for(int i=0;i<MAX_ROW;i++){
+            for(int j=0;j<MAX_COL;j++){
+                System.out.printf("%d ",grid[i][j]);
+            }
+            System.out.println();
+        }
+        System.out.println("===================");
+    }
 }
